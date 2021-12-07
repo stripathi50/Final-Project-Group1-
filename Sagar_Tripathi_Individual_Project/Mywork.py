@@ -513,3 +513,350 @@ if __name__ == '__main__':
     #::------------------------------------
     data_happiness()
     main()
+    
+    class CorrelationPlot(QMainWindow):
+    #;:-----------------------------------------------------------------------
+    # This class creates a canvas to draw a correlation plot
+    # It presents all the features plus the happiness score
+    # the methods for this class are:
+    #   init
+    #   initUi
+    #   update
+    #::-----------------------------------------------------------------------
+    send_fig = pyqtSignal(str)
+
+    def _init_(self):
+        #::--------------------------------------------------------
+        # Initialize the values of the class
+        #::--------------------------------------------------------
+        super(CorrelationPlot, self)._init_()
+
+        self.Title = 'Correlation Plot'
+        self.initUi()
+
+    def initUi(self):
+        #::--------------------------------------------------------------
+        #  Creates the canvas and elements of the canvas
+        #::--------------------------------------------------------------
+        self.setWindowTitle(self.Title)
+        self.setStyleSheet(font_size_window)
+
+        self.main_widget = QWidget(self)
+
+        self.layout = QVBoxLayout(self.main_widget)
+
+        self.groupBox1 = QGroupBox('Correlation Plot Features')
+        self.groupBox1Layout= QGridLayout()
+        self.groupBox1.setLayout(self.groupBox1Layout)
+
+
+        self.feature0 = QCheckBox(features_list[0],self)
+        self.feature1 = QCheckBox(features_list[1],self)
+        self.feature2 = QCheckBox(features_list[2], self)
+        self.feature3 = QCheckBox(features_list[3], self)
+        self.feature4 = QCheckBox(features_list[4],self)
+        self.feature5 = QCheckBox(features_list[5],self)
+        self.feature6 = QCheckBox(features_list[6], self)
+        self.feature7 = QCheckBox(features_list[7], self)
+        self.feature8 = QCheckBox(features_list[8], self)
+        self.feature9 = QCheckBox(features_list[9], self)
+        self.feature10 = QCheckBox(features_list[10], self)
+        self.feature11 = QCheckBox(features_list[11], self)
+        self.feature12 = QCheckBox(features_list[12], self)
+        self.feature0.setChecked(True)
+        self.feature1.setChecked(True)
+        self.feature2.setChecked(True)
+        self.feature3.setChecked(True)
+        self.feature4.setChecked(True)
+        self.feature5.setChecked(True)
+        self.feature6.setChecked(True)
+        self.feature7.setChecked(True)
+        self.feature8.setChecked(True)
+        self.feature9.setChecked(True)
+        self.feature10.setChecked(True)
+        self.feature11.setChecked(True)
+        self.feature12.setChecked(True)
+
+        self.btnExecute = QPushButton("Create Plot")
+        self.btnExecute.clicked.connect(self.update)
+
+        self.groupBox1Layout.addWidget(self.feature0,0,0)
+        self.groupBox1Layout.addWidget(self.feature1,0,1)
+        self.groupBox1Layout.addWidget(self.feature2,0,2)
+        self.groupBox1Layout.addWidget(self.feature3,0,3)
+        self.groupBox1Layout.addWidget(self.feature4,1,0)
+        self.groupBox1Layout.addWidget(self.feature5,1,1)
+        self.groupBox1Layout.addWidget(self.feature6,1,2)
+        self.groupBox1Layout.addWidget(self.feature7,1,3)
+        self.groupBox1Layout.addWidget(self.feature8,2,0)
+        self.groupBox1Layout.addWidget(self.feature9,2,1)
+        self.groupBox1Layout.addWidget(self.feature10,2,2)
+        self.groupBox1Layout.addWidget(self.feature11,2,3)
+        self.groupBox1Layout.addWidget(self.feature12,3,0)
+        self.groupBox1Layout.addWidget(self.btnExecute,4,0)
+
+
+        self.fig = Figure()
+        self.ax1 = self.fig.add_subplot(111)
+        self.axes=[self.ax1]
+        self.canvas = FigureCanvas(self.fig)
+
+        self.canvas.setSizePolicy(QSizePolicy.Expanding,
+                                  QSizePolicy.Expanding)
+
+        self.canvas.updateGeometry()
+
+
+        self.groupBox2 = QGroupBox('Correlation Plot')
+        self.groupBox2Layout= QVBoxLayout()
+        self.groupBox2.setLayout(self.groupBox2Layout)
+
+        self.groupBox2Layout.addWidget(self.canvas)
+
+
+        self.layout.addWidget(self.groupBox1)
+        self.layout.addWidget(self.groupBox2)
+
+        self.setCentralWidget(self.main_widget)
+        self.resize(900, 900)
+        self.show()
+        self.update()
+
+    def update(self):
+
+        #::------------------------------------------------------------
+        # Populates the elements in the canvas using the values
+        # chosen as parameters for the correlation plot
+        #::------------------------------------------------------------
+        self.ax1.clear()
+
+        X_1 = data["GAD_T"]
+
+        list_corr_features = pd.DataFrame(data["GAD_T"])
+        if self.feature0.isChecked():
+            list_corr_features = pd.concat([list_corr_features, data[features_list[0]]],axis=1)
+
+        if self.feature1.isChecked():
+            list_corr_features = pd.concat([list_corr_features, data[features_list[1]]],axis=1)
+
+        if self.feature2.isChecked():
+            list_corr_features = pd.concat([list_corr_features, data[features_list[2]]],axis=1)
+
+        if self.feature3.isChecked():
+            list_corr_features = pd.concat([list_corr_features, data[features_list[3]]],axis=1)
+        if self.feature4.isChecked():
+            list_corr_features = pd.concat([list_corr_features, data[features_list[4]]],axis=1)
+
+        if self.feature5.isChecked():
+            list_corr_features = pd.concat([list_corr_features, data[features_list[5]]],axis=1)
+
+        if self.feature6.isChecked():
+            list_corr_features = pd.concat([list_corr_features, data[features_list[6]]],axis=1)
+
+        if self.feature7.isChecked():
+            list_corr_features = pd.concat([list_corr_features, data[features_list[7]]],axis=1)
+        if self.feature8.isChecked():
+            list_corr_features = pd.concat([list_corr_features, data[features_list[8]]],axis=1)
+        if self.feature9.isChecked():
+            list_corr_features = pd.concat([list_corr_features, data[features_list[9]]],axis=1)
+        if self.feature10.isChecked():
+            list_corr_features = pd.concat([list_corr_features, data[features_list[10]]],axis=1)
+        if self.feature11.isChecked():
+            list_corr_features = pd.concat([list_corr_features, data[features_list[11]]],axis=1)
+        if self.feature12.isChecked():
+            list_corr_features = pd.concat([list_corr_features, data[features_list[12]]],axis=1)
+
+
+        vsticks = ["dummy"]
+        vsticks1 = list(list_corr_features.columns)
+        vsticks1 = vsticks + vsticks1
+        res_corr = list_corr_features.corr()
+        self.ax1.matshow(res_corr, cmap= plt.cm.get_cmap('flare', 14))
+        self.ax1.set_yticklabels(vsticks1)
+        self.ax1.set_xticklabels(vsticks1,rotation = 90)
+
+        self.fig.tight_layout()
+        self.fig.canvas.draw_idle()
+
+
+class HappinessGraphs(QMainWindow):
+    #::---------------------------------------------------------
+    # This class crates a canvas with a plot to show the relation
+    # from each feature in the dataset with the happiness score
+    # methods
+    #    init
+    #   update
+    #::---------------------------------------------------------
+    send_fig = pyqtSignal(str)
+
+    def _init_(self):
+        #::--------------------------------------------------------
+        # Crate a canvas with the layout to draw a dotplot
+        # The layout sets all the elements and manage the changes
+        # made on the canvas
+        #::--------------------------------------------------------
+        super(HappinessGraphs, self)._init_()
+
+        self.Title = "Features vrs GAD_T"
+        self.main_widget = QWidget(self)
+
+        self.setWindowTitle(self.Title)
+        self.setStyleSheet(font_size_window)
+
+        self.fig = Figure()
+        self.ax1 = self.fig.add_subplot(111)
+        self.axes=[self.ax1]
+        self.canvas = FigureCanvas(self.fig)
+
+
+        self.canvas.setSizePolicy(QSizePolicy.Expanding,
+                                  QSizePolicy.Expanding)
+
+        self.canvas.updateGeometry()
+
+        self.dropdown1 = QComboBox()
+        self.dropdown1.addItems(['GAD5','GAD6','GADE','SPIN_T','SWL_T','Game','Playstyle','Platform', 'Gender','Age','Hours','Work','Residence'])
+
+        self.dropdown1.currentIndexChanged.connect(self.update)
+        self.label = QLabel("A plot:")
+
+        self.checkbox1 = QCheckBox('Show Regression Line', self)
+        self.checkbox1.stateChanged.connect(self.update)
+
+        self.layout = QGridLayout(self.main_widget)
+        self.layout.addWidget(QLabel("Select Index for subplots"))
+        self.layout.addWidget(self.dropdown1)
+        self.layout.addWidget(self.checkbox1)
+        self.layout.addWidget(self.canvas)
+
+        self.setCentralWidget(self.main_widget)
+        self.show()
+        self.update()
+
+    def update(self):
+        #::--------------------------------------------------------
+        # This method executes each time a change is made on the canvas
+        # containing the elements of the graph
+        # The purpose of the method es to draw a dot graph using the
+        # score of happiness and the feature chosen the canvas
+        #::--------------------------------------------------------
+        colors=["b", "r", "g", "y", "k", "c"]
+        self.ax1.clear()
+        cat1 = self.dropdown1.currentText()
+
+        X_1 = data["GAD_T1"]
+        y_1 = data[cat1]
+
+
+        self.ax1.scatter(X_1,y_1)
+
+        if self.checkbox1.isChecked():
+
+            b, m = polyfit(X_1, y_1, 1)
+
+            self.ax1.plot(X_1, b + m * X_1, '-', color="orange")
+
+        vtitle = "GAD_T vrs "+ cat1+ "Gaming study"
+        self.ax1.set_title(vtitle)
+        self.ax1.set_xlabel("Level of Generalized anxiety Disorder")
+        self.ax1.set_ylabel(cat1)
+        self.ax1.grid(True)
+
+        self.fig.tight_layout()
+        self.fig.canvas.draw_idle()
+class Histogram_plots(QMainWindow):
+    send_fig = pyqtSignal(str)
+
+    def _init_(self):
+        super(Histogram_plots, self)._init_()
+        self.Title = "Histograms"
+        self.initUi()
+
+    def initUi(self):
+
+        self.setWindowTitle(self.Title)
+        self.setStyleSheet(font_size_window)
+
+        self.main_widget = QWidget(self)
+
+        self.layout = QGridLayout(self.main_widget)
+
+        self.groupBox1 = QGroupBox('Select One of the Features')
+        self.groupBox1Layout = QGridLayout()
+        self.groupBox1.setLayout(self.groupBox1Layout)
+
+        self.feature = []
+
+        for i in range(13):
+            self.feature.append(QCheckBox(features_list_hist[i], self))
+
+        for i in self.feature:
+            i.setChecked(False)
+
+        self.btnExecute = QPushButton("Plot")
+
+        self.btnExecute.clicked.connect(self.update)
+
+        self.groupBox1Layout.addWidget(self.feature[0], 0, 0)
+        self.groupBox1Layout.addWidget(self.feature[1], 0, 1)
+        self.groupBox1Layout.addWidget(self.feature[2], 1, 0)
+        self.groupBox1Layout.addWidget(self.feature[3], 1, 1)
+        self.groupBox1Layout.addWidget(self.feature[4], 2, 0)
+        self.groupBox1Layout.addWidget(self.feature[5], 2, 1)
+        self.groupBox1Layout.addWidget(self.feature[6], 3, 0)
+        self.groupBox1Layout.addWidget(self.feature[7], 3, 1)
+        self.groupBox1Layout.addWidget(self.feature[8], 4, 0)
+        self.groupBox1Layout.addWidget(self.feature[9], 4, 1)
+        self.groupBox1Layout.addWidget(self.feature[10], 5, 0)
+        self.groupBox1Layout.addWidget(self.feature[11], 5, 1)
+        self.groupBox1Layout.addWidget(self.feature[12], 6, 0)
+        self.groupBox1Layout.addWidget(self.btnExecute, 7, 1)
+
+        self.fig1, self.ax1 = plt.subplots()
+        self.axes = [self.ax1]
+        self.canvas1 = FigureCanvas(self.fig1)
+
+        self.canvas1.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        self.canvas1.updateGeometry()
+
+        self.groupBoxG1 = QGroupBox('Histogram Plot :')
+        self.groupBoxG1Layout = QVBoxLayout()
+        self.groupBoxG1.setLayout(self.groupBoxG1Layout)
+
+        self.groupBoxG1Layout.addWidget(self.canvas1)
+
+        self.layout.addWidget(self.groupBox1, 0, 0)
+        self.layout.addWidget(self.groupBoxG1, 0, 1)
+
+        self.setCentralWidget(self.main_widget)
+        self.resize(1200, 900)
+        self.show()
+
+    def Message(self):
+        QMessageBox.about(self, "Warning", " You can't exceed more than 1 feature")
+
+    def update(self):
+        self.current_features = pd.DataFrame([])
+        x_a = ''
+        work = 0
+        for i in range(13):
+            if self.feature[i].isChecked():
+                if len(self.current_features) > 1:
+                    self.Message()
+                    work = 1
+                    break
+
+                elif len(self.current_features) == 0:
+                    self.current_features = data[features_list_hist[i]]
+                    x_a = features_list_hist[i]
+                    work=0
+
+        if work == 0:
+            self.ax1.clear()
+            self.current_features.value_counts().plot(kind='bar', ax=self.ax1)
+            self.ax1.set_title('Histogram of : ' + x_a)
+            self.ax1.set_xlabel(x_a)
+            self.ax1.set_ylabel('frequency')
+            self.fig1.tight_layout()
+            self.fig1.canvas.draw_idle()
